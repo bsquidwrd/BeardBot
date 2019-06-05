@@ -1,1 +1,2 @@
-twitchio==1.0.0
+git+https://github.com/TwitchIO/TwitchIO.git
+requests==2.22.0
