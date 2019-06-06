@@ -1,45 +1,42 @@
 from twitchio.ext import commands
-from twitchio import dataclasses
-from cogs.utils import checks
 
 
 class Beard(commands.AutoCog):
     def __init__(self, bot):
         self.bot = bot
 
-    # def _basic__unload(self):
-    #     pass
-
     def _prepare(self, bot):
-        # I don't know why this is here
-        # but it's required to have a cog
-        # so keep it as a pass
         pass
 
+
+    async def event_message(self, message):
+        if 'Cheer' in message.content:
+            self.bot.log.info(message.content)
+
     
-    @commands.command(name='getid')
-    async def getid_command(self, ctx, *, user : str = None):
-        if ctx.channel.name == self.bot.nick or checks.is_owner(ctx):
-            if user:
-                possible_users = await self.bot.get_users(user)
-                if len(possible_users) == 0:
-                    await ctx.send(f'{ctx.author.name}, no users found with username \'{user}\'')
-                    return
-                else:
-                    u = possible_users[0]
-            else:
-                u = ctx.author
-            await ctx.send(f'{ctx.author.name}, ID = {u.id}!')
+    async def event_usernotice_subscription(self, notice):
+        sub_points = 0
+        sub_type = None
+        if '#shave' in notice.tags.get('system-msg'):
+            sub_type = '#shave'
+        elif '#save' in notice.tags.get('system-msg'):
+            sub_type = '#save'
+        else:
+            self.bot.log.info(f'{notice.user.name} did not specify #save or #shave')
+            return
+
+        if notice.sub_plan == 'Prime' or notice.sub_plan == 1000:
+            sub_points = 5
+        elif notice.sub_plan == 2000:
+            sub_points = 10
+        elif notice.sub_plan == 3000:
+            sub_points = 30
+        self.bot.log.info(f'{notice.user.name} has contibuted to {sub_type} for {sub_points} points')
 
 
 def prepare(bot):
-    # Module is being loaded
-    # Prepare anything you need
-    # then add the cog
     bot.add_cog(Beard(bot))
 
 
 def breakdown(bot):
-    # Incase you wanna do something
-    # when the Module is getting unloaded?
     pass
