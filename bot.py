@@ -2,14 +2,9 @@ import os
 import datetime
 import logging
 import traceback
-
+import web.wsgi
 from twitchio.ext import commands
 from twitchio.ext.commands.errors import CommandNotFound
-
-try:
-    import environment
-except Exception as e:
-    pass
 
 
 logging.basicConfig(level=logging.INFO,
@@ -24,15 +19,16 @@ initial_extensions = (
 
 
 class Bot(commands.Bot):
-    def __init__(self, irc_token, nick, client_id='test', initial_channels=[]):
-        params = {
+    def __init__(self, irc_token, nick, client_id='test', initial_channels=[], api_token='test'):
+        self.params = {
             'irc_token': irc_token,
             'client_id': client_id,
             'nick': nick,
             'prefix': '!',
             'initial_channels': initial_channels,
+            'api_token': api_token,
         }
-        super().__init__(**params)
+        super().__init__(**self.params)
         self.log = logging
 
         for extension in initial_extensions:
@@ -81,7 +77,12 @@ if __name__ == '__main__':
     nick = os.environ['BOT_NICK']
     irc_token = os.environ['BOT_TOKEN']
     client_id = os.getenv('BOT_CLIENTID', None)
+    api_token = os.getenv('BOT_APITOKEN', None)
 
-    initial_channels = [nick, 'bsquidwrd', 'xqcow']
-    bot = Bot(irc_token=irc_token, client_id=client_id, nick=nick, initial_channels=initial_channels)
+    # initial_channels = os.getenv('INITIAL_CHANNELS', ['bsquidwrd'])
+    try:
+        initial_channels = os.environ['INITIAL_CHANNELS'].split(',')
+    except:
+        initial_channels = ['bsquidwrd']
+    bot = Bot(irc_token=irc_token, client_id=client_id, nick=nick, initial_channels=initial_channels, api_token=api_token)
     bot.run()

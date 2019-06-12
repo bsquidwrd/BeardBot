@@ -1,2 +1,2 @@
 git+https://github.com/TwitchIO/TwitchIO.git
-requests==2.22.0
+python-socketio[client]==4.1.0

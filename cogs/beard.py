@@ -1,4 +1,7 @@
 from twitchio.ext import commands
+import web.wsgi
+from bearddb.models import BeardLog
+from django.db.models import Sum
 
 
 class Beard(commands.AutoCog):
@@ -9,29 +12,37 @@ class Beard(commands.AutoCog):
         pass
 
 
-    async def event_message(self, message):
-        if 'Cheer' in message.content:
-            self.bot.log.info(message.content)
+    def get_save_count(self):
+        return BeardLog.objects.filter(event_team="#save").aggregate(Sum("event_points"))['event_points__sum']
 
-    
-    async def event_usernotice_subscription(self, notice):
-        sub_points = 0
-        sub_type = None
-        if '#shave' in notice.tags.get('system-msg'):
-            sub_type = '#shave'
-        elif '#save' in notice.tags.get('system-msg'):
-            sub_type = '#save'
-        else:
-            self.bot.log.info(f'{notice.user.name} did not specify #save or #shave')
-            return
 
-        if notice.sub_plan == 'Prime' or notice.sub_plan == 1000:
-            sub_points = 5
-        elif notice.sub_plan == 2000:
-            sub_points = 10
-        elif notice.sub_plan == 3000:
-            sub_points = 30
-        self.bot.log.info(f'{notice.user.name} has contibuted to {sub_type} for {sub_points} points')
+    def get_shave_count(self):
+        return BeardLog.objects.filter(event_team="#shave").aggregate(Sum("event_points"))['event_points__sum']
+
+
+    @commands.command(name='beard')
+    async def beard_command(self, ctx):
+        save_count = self.get_save_count()
+        shave_count = self.get_shave_count()
+        await ctx.send(f"Team #save: {save_count} | Team #shave: {shave_count}")
+
+
+    @commands.command(name='beardinfo')
+    async def beard_info_command(self, ctx):
+        message_to_send = "Every $1 from Donations, Bits, Subs, Resubs, and Gifted Subs will count as one point for your preferred team (with an added 5 point bonus for T3 subs). Gifted subs are at choice of gifter. Please clarify with save or shave to have your vote count or if you forget to clarify the point will go to the losing team automatically."
+        await ctx.send(message_to_send)
+
+
+    @commands.command(name='save')
+    async def save_command(self, ctx):
+        save_count = self.get_save_count()
+        await ctx.send(f"The Current Save Count is: {save_count}")
+
+
+    @commands.command(name='shave')
+    async def shave_command(self, ctx):
+        shave_count = self.get_shave_count()
+        await ctx.send(f"The Current Shave Count is: {shave_count}")
 
 
 def prepare(bot):
