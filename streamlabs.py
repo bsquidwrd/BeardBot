@@ -74,6 +74,7 @@ def event_handler(raw_data):
                     gifted = True
                     name = data['gifter']
                     sub_plan = data['subPlan']
+                    message = f"Gifted sub to {data['name']}"
                 else:
                     sub_plan = data['sub_plan']
 
