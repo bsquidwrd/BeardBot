@@ -59,9 +59,6 @@ if __name__ == '__main__':
     client_id = os.getenv('BOT_CLIENTID', None)
     api_token = os.getenv('BOT_APITOKEN', None)
 
-    try:
-        initial_channels = os.environ['INITIAL_CHANNELS'].split(',')
-    except:
-        initial_channels = ['bsquidwrd']
+    initial_channels = os.environ['INITIAL_CHANNELS'].split(',')
     bot = Bot(irc_token=irc_token, client_id=client_id, nick=nick, initial_channels=initial_channels, api_token=api_token)
     bot.run()
