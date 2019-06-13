@@ -8,3 +8,4 @@ class BeardLog(models.Model):
     event_points = models.IntegerField(default=0, blank=True, null=True)
     event_team = models.CharField(max_length=10, blank=True, null=True)
     event_message = models.TextField(blank=True, null=True)
+    event_test = models.BooleanField(default=True)

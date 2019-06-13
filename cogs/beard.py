@@ -13,11 +13,17 @@ class Beard(commands.AutoCog):
 
 
     def get_save_count(self):
-        return BeardLog.objects.filter(event_team="#save").aggregate(Sum("event_points"))['event_points__sum']
+        count = BeardLog.objects.filter(event_team="#save", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
+        if count is None:
+            count = 0
+        return count
 
 
     def get_shave_count(self):
-        return BeardLog.objects.filter(event_team="#shave").aggregate(Sum("event_points"))['event_points__sum']
+        count = BeardLog.objects.filter(event_team="#shave", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
+        if count is None:
+            count = 0
+        return count
 
 
     @commands.command(name='beard')

@@ -1,2 +1,4 @@
 git+https://github.com/TwitchIO/TwitchIO.git
 python-socketio[client]==4.1.0
+mysqlclient==1.4.2
+django==2.2.2

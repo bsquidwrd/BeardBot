@@ -22,7 +22,7 @@ def get_team(message):
         return match.group()
 
 
-def log_event(event_id, event_user, event_type, event_points, event_team, event_message):
+def log_event(event_id, event_user, event_type, event_points, event_team, event_message, event_test=False):
     logging.info(f'{event_user} put {event_points} points towards {event_team} with a {event_type}')
     try:
         BeardLog.objects.create(event_id=event_id, event_user=event_user, event_type=event_type, event_points=event_points, event_team=event_team, event_message=event_message)
@@ -46,12 +46,13 @@ def event_handler(raw_data):
         event_for = raw_data['for']
         data = raw_data['message'][0]
         message = data['message']
+        event_test = data['isTest']
         # raw_team = get_team(message)
         import random
         raw_team = random.choice(['#save','#shave'])
 
-        if not data['isTest']:
-            return
+        # if not event_test:
+        #     return
 
         if raw_team:
             name = ''
@@ -83,7 +84,7 @@ def event_handler(raw_data):
                 else:
                     pass
 
-            log_event(event_id, name, event_type, points, team, message)
+            log_event(event_id, name, event_type, points, team, message, event_test)
 
     except Exception as e:
         traceback.print_exc()
