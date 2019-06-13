@@ -38,19 +38,6 @@ class Bot(commands.Bot):
                 traceback.print_exc()
 
 
-    def get_author_prefix(self, message):
-        user_prefix = ''
-        if message.author.is_subscriber:
-            user_prefix = '[Subscriber] '
-        if message.author.is_mod:
-            user_prefix = '[Moderator] '
-        # if message.tags['room-id'] == message.author.id:
-        #     user_prefix = '[Streamer] '
-        # if message.author.name.lower() == self.nick.lower():
-        #     user_prefix = '[Bot] '
-        return user_prefix
-
-
     async def event_ready(self):
         ready_string = f'Ready: {self.nick}'
         self.log.info(ready_string)
@@ -58,16 +45,10 @@ class Bot(commands.Bot):
 
 
     async def event_command_error(self, ctx, error):
-        # self.log.error(f'Error running command: {error} for {ctx.message.author.name}')
         pass
 
 
     async def event_message(self, message):
-        user_prefix = ''#self.get_author_prefix(message)
-        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # print('{2} | #{0.channel} | {1}{0.author.name} | {3}'.format(message, user_prefix, timestamp, message.content))
-        # self.log.info(f'#{message.channel} - {user_prefix}{message.author.name} - {message.content}')
-
         if message.author.name.lower() != self.nick.lower():
             await self.handle_commands(message)
 
