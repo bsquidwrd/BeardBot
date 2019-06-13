@@ -59,7 +59,6 @@ if __name__ == '__main__':
     client_id = os.getenv('BOT_CLIENTID', None)
     api_token = os.getenv('BOT_APITOKEN', None)
 
-    # initial_channels = os.getenv('INITIAL_CHANNELS', ['bsquidwrd'])
     try:
         initial_channels = os.environ['INITIAL_CHANNELS'].split(',')
     except:
