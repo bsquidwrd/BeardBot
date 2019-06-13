@@ -14,7 +14,6 @@ initial_extensions = (
     'cogs.admin',
     'cogs.basic',
     'cogs.beard',
-    # 'cogs.mod',
 )
 
 
