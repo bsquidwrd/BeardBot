@@ -4,6 +4,7 @@ import json
 import logging
 import traceback
 import socketio
+import sys
 
 import web.wsgi
 from bearddb.models import BeardLog
@@ -11,9 +12,14 @@ from cogs.utils.team import get_team
 
 
 sio = socketio.Client()
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
-                    )
+
+
+logging.basicConfig(
+    filename="logs_streamlabs.log",
+    filemode="a",
+    level=logging.INFO,
+    format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
+)
 
 
 def log_event(event_id, event_user, event_type, event_points, event_team, event_message, event_test=False):
@@ -27,6 +33,7 @@ def log_event(event_id, event_user, event_type, event_points, event_team, event_
 @sio.event
 def connect():
     logging.info('Connected to Server Socket')
+    print("Connected to Server Socket.")
 
 
 @sio.on('event')

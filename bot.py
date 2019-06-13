@@ -7,14 +7,18 @@ from twitchio.ext import commands
 from twitchio.ext.commands.errors import CommandNotFound
 
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
-                    )
 initial_extensions = (
     'cogs.admin',
     'cogs.basic',
     'cogs.beard',
     'cogs.tasks',
+)
+
+logging.basicConfig(
+    filename="logs_bot.log",
+    filemode="a",
+    level=logging.INFO,
+    format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
 )
 
 
@@ -43,6 +47,8 @@ class Bot(commands.Bot):
         ready_string = f'Ready: {self.nick}'
         self.log.info(ready_string)
         self.log.info('-'*len(ready_string))
+        print(ready_string)
+        print('-'*len(ready_string))
 
 
     async def event_command_error(self, ctx, error):
