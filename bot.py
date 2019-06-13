@@ -59,6 +59,9 @@ if __name__ == '__main__':
     client_id = os.getenv('BOT_CLIENTID', None)
     api_token = os.getenv('BOT_APITOKEN', None)
 
-    initial_channels = os.environ['INITIAL_CHANNELS'].split(',')
+    initial_channels = os.getenv('INITIAL_CHANNELS', '').split(',')
+    if initial_channels[0] == '' or initial_channels is None or len(initial_channels) > 1:
+        raise Exception("Please make sure you are only specifiying 1 channel in the INITIAL_CHANNELS environment key")
+
     bot = Bot(irc_token=irc_token, client_id=client_id, nick=nick, initial_channels=initial_channels, api_token=api_token)
     bot.run()
