@@ -15,7 +15,7 @@ sio = socketio.Client()
 
 
 logging.basicConfig(
-    filename="logs_streamlabs.log",
+    filename=os.path.join(os.getenv('LOG_DIR', ''), "beardbot_streamlabs.log"),
     filemode="a",
     level=logging.INFO,
     format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',

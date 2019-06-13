@@ -10,3 +10,4 @@ os.environ['DATABASE_USER'] = '' # MySQL Username
 os.environ['DATABASE_PASSWORD'] = '' # MySQL Password
 os.environ['DATABASE_HOST'] = '' # MySQL Host (dns name or IP or even localhost)
 os.environ['DATABASE_PORT'] = '3306' # MySQL Port
+os.environ['LOG_DIR'] = '' # Whatever directory you want the log files saved ex: /var/log/

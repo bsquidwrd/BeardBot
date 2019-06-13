@@ -15,7 +15,7 @@ initial_extensions = (
 )
 
 logging.basicConfig(
-    filename="logs_bot.log",
+    filename=os.path.join(os.getenv('LOG_DIR', ''), "beardbot_bot.log"),
     filemode="a",
     level=logging.INFO,
     format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
