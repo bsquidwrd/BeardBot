@@ -7,7 +7,7 @@
 
 ### Setup
 1. Clone the repository to your server: `git clone https://github.com/bsquidwrd/BeardBot.git`
-1. Install the requirements: `pip install -r requirements.txt`
+1. Install the requirements: `python3.7 -m pip install -r requirements.txt`
 1. Setup a MySQL instance and create a database for the bot along with a user that has full permissions to it
 1. Make your `environment.py` file: `cp environment_example.py environment.py`
 1. Edit `environment.py` accordingly with your OAUTH token for the Twitch Account for the bot to run as, etc
