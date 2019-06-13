@@ -1,7 +1,8 @@
 from twitchio.ext import commands
 import web.wsgi
 from bearddb.models import BeardLog
-from django.db.models import Sum
+from django.db.models import Sum, Q
+from cogs.utils.team import get_team
 
 
 class Beard(commands.AutoCog):
@@ -49,6 +50,22 @@ class Beard(commands.AutoCog):
     async def shave_command(self, ctx):
         shave_count = self.get_shave_count()
         await ctx.send(f"The Current Shave Count is: {shave_count}")
+
+
+    @commands.command(name='claim') # Maybe do spend instead?
+    async def claim_command(self, ctx, *, raw_team: str = None):
+        events = BeardLog.objects.filter(event_user=ctx.author.name).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
+        points = events.aggregate(Sum("event_points"))['event_points__sum']
+        if events.count() == 0:
+            await ctx.send(f"{ctx.author.name} It doesn't look like you have any pending points to claim")
+        else:
+            team = get_team(raw_team)
+            if team:
+                events.update(event_team=team)
+                self.bot.log.info(f"{ctx.author.name} claimed {points} to team {team}")
+                await ctx.send(f"{ctx.author.name} I have allocated {points} points to team {team}")
+            else:
+                await ctx.send(f"{ctx.author.name} I didn't quite understand the team you typed. Please try again and make sure to type either #save or #shave")
 
 
 def prepare(bot):
