@@ -34,7 +34,7 @@ class Tasks(commands.AutoCog):
 
     
     async def run_scheduled_tasks(self):
-        events = BeardLog.objects.filter(Q(event_team__isnull=True)|Q(event_team__exact='')).values("event_user").annotate(n=Sum("event_points"))
+        events = BeardLog.objects.filter(event_test=False).filter(Q(event_team__isnull=True)|Q(event_team__exact='')).values("event_user").annotate(n=Sum("event_points"))
         channel = self.bot.get_channel(os.environ['INITIAL_CHANNELS'])
         if channel is None:
             return

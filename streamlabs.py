@@ -15,8 +15,6 @@ sio = socketio.Client()
 
 
 logging.basicConfig(
-    filename=os.path.join(os.getenv('LOG_DIR', ''), "beardbot_streamlabs.log"),
-    filemode="a",
     level=logging.INFO,
     format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
 )
@@ -70,12 +68,15 @@ def event_handler(raw_data):
                 gifted = False
                 sub_plan = ''
 
-                if data['type'] == 'subgift':
-                    gifted = True
-                    name = data['gifter']
-                    sub_plan = data['subPlan']
-                    message = f"Gifted sub to {data['name']}"
-                else:
+                try:
+                    if data['type'] == 'subgift':
+                        gifted = True
+                        name = data['gifter']
+                        sub_plan = data['subPlan']
+                        message = f"Gifted sub to {data['name']}"
+                    else:
+                        sub_plan = data['sub_plan']
+                except:
                     sub_plan = data['sub_plan']
 
                 if sub_plan == "Prime" or sub_plan == "1000":

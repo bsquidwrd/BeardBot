@@ -15,8 +15,6 @@ initial_extensions = (
 )
 
 logging.basicConfig(
-    filename=os.path.join(os.getenv('LOG_DIR', ''), "beardbot_bot.log"),
-    filemode="a",
     level=logging.INFO,
     format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
 )
@@ -35,6 +33,8 @@ class Bot(commands.Bot):
         super().__init__(**self.params)
         self.log = logging
 
+        self.log.info(f"Initial channels: {self.initial_channels}")
+
         for extension in initial_extensions:
             try:
                 self.load_module(extension)
@@ -52,7 +52,8 @@ class Bot(commands.Bot):
 
 
     async def event_command_error(self, ctx, error):
-        pass
+        #pass
+        self.log.info(error)
 
 
     async def event_message(self, message):

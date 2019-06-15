@@ -1,0 +1,45 @@
+version: '3'
+services:
+
+  bot:
+    image: beardbot:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["python", "bot.py"]
+    networks:
+      - default
+      - backend
+    depends_on:
+      - db
+
+  streamlabs:
+    image: beardbot:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["python", "streamlabs.py"]
+    networks:
+      - default
+      - backend
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7.26
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      backend:
+        aliases:
+          - beardbot_db
+
+networks:
+  backend:
+    internal: true
+
+volumes:
+  db:
