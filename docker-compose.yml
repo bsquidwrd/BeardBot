@@ -2,7 +2,7 @@ version: '3'
 services:
 
   bot:
-    image: beardbot:latest
+    image: bsquidwrd/beardbot:latest
     restart: unless-stopped
     env_file:
       - .env
@@ -14,7 +14,7 @@ services:
       - db
 
   streamlabs:
-    image: beardbot:latest
+    image: bsquidwrd/beardbot:latest
     restart: unless-stopped
     env_file:
       - .env
