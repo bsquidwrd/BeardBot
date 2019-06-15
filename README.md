@@ -2,7 +2,32 @@
 
 ### Requirements
 * Linux (any kernel should be fine)
-* Docker
+* [Docker](https://docker.com/)
+
+
+### Install Docker
+Go to the official [Docker Install documentationn](https://docs.docker.com/install/#server) and follow the steps for your operating system
+Ubuntu Xenial 16.04 (LTS) x_86_64/amd64 example:
+```bash
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+
+### Install Docker Compose
+According to the official [Docker Compose documentation](https://docs.docker.com/compose/install/), install Docker as follows:
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+docker-compose --version
+```
+
 
 ### Setup
 1. Copy the `docker-compose.yml` to the machine/server you will be running the bot from
