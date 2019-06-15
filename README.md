@@ -1,7 +1,7 @@
 # BeardBot
 
 ### Requirements
-* Linux (any kernel should be fine)
+* Linux ([Docker supported versions](https://docs.docker.com/install/#server))
 * [Docker](https://docker.com/)
 * [Docker Compose](https://docs.docker.com/compose/)
 
