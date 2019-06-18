@@ -4,8 +4,6 @@ services:
   bot:
     image: bsquidwrd/beardbot:latest
     restart: unless-stopped
-    env_file:
-      - .env
     command: ["python", "bot.py"]
     networks:
       - default
@@ -16,8 +14,6 @@ services:
   streamlabs:
     image: bsquidwrd/beardbot:latest
     restart: unless-stopped
-    env_file:
-      - .env
     command: ["python", "streamlabs.py"]
     networks:
       - default
@@ -28,8 +24,6 @@ services:
   db:
     image: mysql:5.7.26
     restart: unless-stopped
-    env_file:
-      - .env
     volumes:
       - db:/var/lib/mysql
     networks:
