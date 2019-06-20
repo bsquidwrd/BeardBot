@@ -23,6 +23,10 @@ logging.basicConfig(
 def log_event(event_id, event_user, event_type, event_points, event_team, event_message, event_test=False):
     logging.info(f'{event_user} put {event_points} points towards {event_team} with a {event_type}')
     try:
+        existing_logs = BeardLog.objects.filter(event_id=event_id)
+        if existing_logs.count() >= 1:
+            logging.info(f'{event_id} already logged for user {event_user}. Skipping')
+            return
         BeardLog.objects.create(event_id=event_id, event_user=event_user, event_type=event_type, event_points=event_points, event_team=event_team, event_message=event_message, event_test=event_test)
     except:
         pass
