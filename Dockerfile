@@ -14,17 +14,17 @@ RUN pip install --no-cache-dir -r /requirements.txt
 ADD . /code/
 
 # Add any custom, static environment variables needed by Django or your settings file here:
-ENV 'BOT_TOKEN'='oauth:placeholder'
-ENV 'BOT_NICK'='placeholder'
+ENV 'BOT_TOKEN'='oauth:CHANGEME'
+ENV 'BOT_NICK'='CHANGEME'
 ENV 'OWNER_ID'='22812120'
-ENV 'INITIAL_CHANNELS'='placeholder'
-ENV 'STREAMLABS_TOKEN'='placeholder'
-ENV 'DATABASE_NAME'='placeholder'
-ENV 'DATABASE_USER'='placeholder'
-ENV 'DATABASE_PASSWORD'='placeholder'
-ENV 'DATABASE_HOST'='placeholder'
-ENV 'DATABASE_PORT'='placeholder'
-ENV 'LOG_DIR'='/var/log/'
+ENV 'INITIAL_CHANNELS'='CHANGEME'
+ENV 'STREAMLABS_TOKEN'='CHANGEME'
+ENV 'MYSQL_HOST'='CHANGEME'
+ENV 'MYSQL_PORT'='CHANGEME'
+ENV 'MYSQL_DATABASE'='CHANGEME'
+ENV 'MYSQL_USER'='CHANGEME'
+ENV 'MYSQL_PASSWORD'='CHANGEME'
+ENV 'MYSQL_RANDOM_ROOT_PASSWORD'='CHANGEME'
 
 # Start Bot
 CMD ["python", "/code/bot.py"]
