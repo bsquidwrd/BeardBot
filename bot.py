@@ -52,8 +52,8 @@ class Bot(commands.Bot):
 
 
     async def event_command_error(self, ctx, error):
-        #pass
-        self.log.info(error)
+        #self.log.info(error)
+        pass
 
 
     async def event_message(self, message):
