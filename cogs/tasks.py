@@ -28,7 +28,7 @@ class Tasks(commands.AutoCog):
         try:
             while True:
                 await self.run_scheduled_tasks()
-                await asyncio.sleep(20)
+                await asyncio.sleep(60)
         except asyncio.CancelledError:
             pass
 
