@@ -1,5 +1,7 @@
 environment.py
 .env
+build.sh
+build.ps1
 
 .vscode/*
 !.vscode/settings.json
