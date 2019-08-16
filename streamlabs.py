@@ -45,11 +45,14 @@ def event_handler(raw_data):
         return
 
     try:
-        event_id = raw_data['event_id']
-        event_for = raw_data['for']
+        event_for = raw_data.get('for', None)
         data = raw_data['message'][0]
+        try:
+            event_id = raw_data['event_id']
+        except:
+            event_id = data['event_id']
         event_test = data.get('isTest', False)
-        message = data.get('message', '')
+        message = data.get('message', None)
         team = get_team(message)
         message = ''
         name = ''
@@ -60,10 +63,10 @@ def event_handler(raw_data):
         except:
             pass
 
-        if event_for == 'streamlabs' and event_type == 'donation':
+        if event_type == 'donation':
             name = data['from']
             amount = data['amount']
-            points = int(amount)
+            points = int(float(amount))
 
         elif event_for == 'twitch_account':
             name = data['name']
