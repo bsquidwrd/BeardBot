@@ -43,6 +43,8 @@ def event_handler(raw_data):
     event_type = raw_data['type']
     if event_type not in ['donation', 'subscription', 'resub', 'bits']:
         return
+    if event_type == 'subscription':
+        logging.info(raw_data)
 
     try:
         event_for = raw_data.get('for', None)
@@ -75,7 +77,7 @@ def event_handler(raw_data):
                 sub_plan = ''
 
                 try:
-                    if data['type'] == 'subgift':
+                    if data['sub_type'] == 'subgift':
                         gifted = True
                         name = data['gifter']
                         sub_plan = data['subPlan']
