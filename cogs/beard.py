@@ -36,7 +36,7 @@ class Beard(commands.AutoCog):
 
     @commands.command(name='beardinfo')
     async def beard_info_command(self, ctx):
-        message_to_send = "Every $1 from Donations, Bits, Subs, Resubs, and Gifted Subs will count as one point for your preferred team (with an added 5 point bonus for T3 subs). Gifted subs are at choice of gifter. Please clarify with save or shave to have your vote count or if you forget to clarify the point will go to the losing team automatically."
+        message_to_send = "Every $1 from Donations, Bits, Subs, Resubs, and Gifted Subs will count as one point for your preferred team (with an added 5 point bonus for T3 subs). Gifted subs are at choice of gifter. Please clarify with #save or #shave to have your vote count or if you forget to clarify the point will go to the losing team automatically."
         await ctx.send(message_to_send)
 
 

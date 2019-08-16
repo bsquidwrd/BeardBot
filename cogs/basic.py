@@ -22,6 +22,10 @@ class Basic(commands.AutoCog):
     async def ping_command(self, ctx):
         await ctx.send(f"Pong {ctx.author.name}")
 
+    @commands.command(name='pong')
+    @commands.check(checks.is_mod)
+    async def ping_command(self, ctx):
+        await ctx.send(f"Ping {ctx.author.name}")
 
 def prepare(bot):
     # Module is being loaded
