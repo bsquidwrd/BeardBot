@@ -28,21 +28,27 @@ class Tasks(commands.AutoCog):
         try:
             while True:
                 await self.run_scheduled_tasks()
-                await asyncio.sleep(60)
+                await asyncio.sleep(20)
         except asyncio.CancelledError:
             pass
 
     
     async def run_scheduled_tasks(self):
-        events = BeardLog.objects.filter(event_test=False).filter(Q(event_team__isnull=True)|Q(event_team__exact='')).values("event_user").annotate(n=Sum("event_points"))
+        events = BeardLog.objects.filter(event_test=False, asks__lt=5).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
+        events_data = events.values("event_user").annotate(n=Sum("event_points"))
         channel = self.bot.get_channel(os.environ['INITIAL_CHANNELS'])
         if channel is None:
             return
-        if events.count() == 0:
+        if events_data.count() == 0:
             return
 
         message = 'Points awaiting claim: '
-        user_messages = [f"{e['event_user']}: {e['n']}" for e in events]
+        user_messages = []
+        for e in events_data:
+            user_messages.append(f"{e['event_user']}: {e['n']}")
+            for i in events.filter(event_user=e['event_user']):
+                i.asks += 1
+                i.save()
         message += ", ".join(user_messages)
 
         message += ". Please type !claim #save or !claim #shave"
