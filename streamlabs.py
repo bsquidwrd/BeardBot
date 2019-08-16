@@ -52,9 +52,8 @@ def event_handler(raw_data):
         except:
             event_id = data['event_id']
         event_test = data.get('isTest', False)
-        message = data.get('message', None)
+        message = data.get('message', '')
         team = get_team(message)
-        message = ''
         name = ''
         points = 0
 
