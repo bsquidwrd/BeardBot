@@ -1,4 +1,4 @@
-#1/bin/sh
+#!/bin/sh
 #pull latest image and restart bot
 
 docker pull bsquidwrd/beardbot:latest
