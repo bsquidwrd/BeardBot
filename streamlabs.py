@@ -19,9 +19,24 @@ logging.basicConfig(
     format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
 )
 
+def get_save_count():
+    count = BeardLog.objects.filter(event_team="#save", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
+    if count is None:
+        count = 0
+    return count
+
+
+def get_shave_count():
+    count = BeardLog.objects.filter(event_team="#shave", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
+    if count is None:
+        count = 0
+    return count
+
 
 def log_event(event_id, event_user, event_type, event_points, event_team, event_message, event_test=False):
-    logging.info(f'{event_user} put {event_points} points towards {event_team} with a {event_type}')
+    save_count = get_save_count()
+    shave_count = get_shave_count()
+    logging.info(f'{event_user} put {event_points} points towards {event_team} with a {event_type} #shave {shave_count} | #save {save_count}')
     try:
         existing_logs = BeardLog.objects.filter(event_id=event_id)
         if existing_logs.count() >= 1:
