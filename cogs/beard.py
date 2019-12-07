@@ -53,8 +53,11 @@ class Beard(commands.AutoCog):
 
 
     @commands.command(name='claim') # Maybe do spend instead?
-    async def claim_command(self, ctx, *, raw_team: str = None):
-        events = BeardLog.objects.filter(event_user=ctx.author.name, event_test=False).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
+    async def claim_command(self, ctx, *, raw_team: str = None, name: str = None):
+        username = ctx.author.name
+        if ctx.author.is_mod and name:
+            username = name
+        events = BeardLog.objects.filter(event_user=username, event_test=False).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
         points = events.aggregate(Sum("event_points"))['event_points__sum']
         if events.count() == 0:
             await ctx.send(f"{ctx.author.name} It doesn't look like you have any pending points to claim")
