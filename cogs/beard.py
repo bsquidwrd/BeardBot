@@ -65,7 +65,9 @@ class Beard(commands.AutoCog):
             team = get_team(raw_team)
             if team:
                 events.update(event_team=team)
-                self.bot.log.info(f"{ctx.author.name} claimed {points} to team {team}")
+                save_count = self.get_save_count()
+                shave_count = self.get_shave_count()
+                self.bot.log.info(f"{ctx.author.name} claimed {points} to team {team}. #shave {shave_count} | #save {save_count}")
                 await ctx.send(f"{ctx.author.name} I have allocated {points} points to team {team}")
             else:
                 await ctx.send(f"{ctx.author.name} I didn't quite understand the team you typed. Please try again and make sure to type either #save or #shave")
