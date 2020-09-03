@@ -13,12 +13,12 @@ services:
     depends_on:
       - db
 
-  streamlabs:
+  streamelements:
     image: bsquidwrd/beardbot:latest
     restart: unless-stopped
     env_file:
       - .env
-    command: ["python", "streamlabs.py"]
+    command: ["python", "streamelements.py"]
     networks:
       - default
       - backend

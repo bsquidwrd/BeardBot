@@ -4,7 +4,6 @@ from bearddb.models import BeardLog
 from django.db.models import Sum, Q
 from cogs.utils.team import get_team
 
-
 class Beard(commands.AutoCog):
     def __init__(self, bot):
         self.bot = bot
@@ -14,14 +13,14 @@ class Beard(commands.AutoCog):
 
 
     def get_save_count(self):
-        count = BeardLog.objects.filter(event_team="#save", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
+        count = BeardLog.objects.filter(event_team="#save", event_test=True).aggregate(Sum("event_points"))['event_points__sum']
         if count is None:
             count = 0
         return count
 
 
     def get_shave_count(self):
-        count = BeardLog.objects.filter(event_team="#shave", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
+        count = BeardLog.objects.filter(event_team="#shave", event_test=True).aggregate(Sum("event_points"))['event_points__sum']
         if count is None:
             count = 0
         return count
@@ -53,25 +52,29 @@ class Beard(commands.AutoCog):
 
 
     @commands.command(name='claim') # Maybe do spend instead?
-    async def claim_command(self, ctx, *, raw_team: str = None, name: str = None):
-        username = ctx.author.name
-        if ctx.author.is_mod and name:
-            username = name
-        events = BeardLog.objects.filter(event_user=username, event_test=False).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
-        points = events.aggregate(Sum("event_points"))['event_points__sum']
-        if events.count() == 0:
-            await ctx.send(f"{ctx.author.name} It doesn't look like you have any pending points to claim")
-        else:
-            team = get_team(raw_team)
-            if team:
-                events.update(event_team=team)
-                save_count = self.get_save_count()
-                shave_count = self.get_shave_count()
-                self.bot.log.info(f"{ctx.author.name} claimed {points} to team {team}. #shave {shave_count} | #save {save_count}")
-                await ctx.send(f"{ctx.author.name} I have allocated {points} points to team {team}")
+    async def claim_command(self, ctx, raw_team: str = None, *, name: str = None):
+        try:
+            username = ctx.author.name
+            on_behalf = ""
+            if ctx.author.is_mod and name:
+                username = name
+                on_behalf = f"on behalf of {name}"
+            events = BeardLog.objects.filter(event_user=username, event_test=True).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
+            points = events.aggregate(Sum("event_points"))['event_points__sum']
+            if events.count() == 0:
+                await ctx.send(f"{ctx.author.name} It doesn't look like you have any pending points to claim")
             else:
-                await ctx.send(f"{ctx.author.name} I didn't quite understand the team you typed. Please try again and make sure to type either #save or #shave")
-
+                team = get_team(raw_team)
+                if team:
+                    events.update(event_team=team)
+                    save_count = self.get_save_count()
+                    shave_count = self.get_shave_count()
+                    self.bot.log.info(f"{ctx.author.name} claimed {points} to team {team} {on_behalf}. #shave {shave_count} | #save {save_count}")
+                    await ctx.send(f"{ctx.author.name} I have allocated {points} points to team {team} {on_behalf}")
+                else:
+                    await ctx.send(f"{ctx.author.name} I didn't quite understand the team you typed. Please try again and make sure to type either #save or #shave")
+        except Exception as e:
+            self.bot.log.error(traceback.print_exc())
 
 def prepare(bot):
     bot.add_cog(Beard(bot))
