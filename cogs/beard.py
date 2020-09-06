@@ -13,14 +13,14 @@ class Beard(commands.AutoCog):
 
 
     def get_save_count(self):
-        count = BeardLog.objects.filter(event_team="#save", event_test=True).aggregate(Sum("event_points"))['event_points__sum']
+        count = BeardLog.objects.filter(event_team="#save", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
         if count is None:
             count = 0
         return count
 
 
     def get_shave_count(self):
-        count = BeardLog.objects.filter(event_team="#shave", event_test=True).aggregate(Sum("event_points"))['event_points__sum']
+        count = BeardLog.objects.filter(event_team="#shave", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
         if count is None:
             count = 0
         return count
@@ -59,7 +59,7 @@ class Beard(commands.AutoCog):
             if ctx.author.is_mod and name:
                 username = name
                 on_behalf = f"on behalf of {name}"
-            events = BeardLog.objects.filter(event_user=username, event_test=True).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
+            events = BeardLog.objects.filter(event_user=username, event_test=False).filter(Q(event_team__isnull=True)|Q(event_team__exact=''))
             points = events.aggregate(Sum("event_points"))['event_points__sum']
             if events.count() == 0:
                 await ctx.send(f"{ctx.author.name} It doesn't look like you have any pending points to claim")

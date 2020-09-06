@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import datetime
 import json
 import logging
 import traceback
@@ -20,20 +20,20 @@ logging.basicConfig(
 )
 
 def get_save_count():
-    count = BeardLog.objects.filter(event_team="#save", event_test=True).aggregate(Sum("event_points"))['event_points__sum']
+    count = BeardLog.objects.filter(event_team="#save", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
     if count is None:
         count = 0
     return count
 
 
 def get_shave_count():
-    count = BeardLog.objects.filter(event_team="#shave", event_test=True).aggregate(Sum("event_points"))['event_points__sum']
+    count = BeardLog.objects.filter(event_team="#shave", event_test=False).aggregate(Sum("event_points"))['event_points__sum']
     if count is None:
         count = 0
     return count
 
 
-def log_event(event_id, event_user, event_type, event_points, event_team, event_message, event_test=True):
+def log_event(event_id, event_user, event_type, event_points, event_team, event_message, event_test=False):
     save_count = get_save_count()
     shave_count = get_shave_count()
     logging.info(f'{event_user} put {event_points} points towards {event_team} with a {event_type} #shave {shave_count} | #save {save_count}')
@@ -72,7 +72,9 @@ def event_handler(raw_data):
     try:
         data = raw_data['event']
         event_type = data['type'].lower()
-        event_id = "3"#"HI, I NEED TO FIGURE THIS PART OUT STILL"
+        # I... I guess this will work?
+        # StreamElements doesn't send IDs
+        event_id = datetime.now().strftime("YYYYmmdd.HHMMSS")
         event_test = data.get('isTest', False)
         message = data.get('message', '')
         team = get_team(message)
