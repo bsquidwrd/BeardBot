@@ -56,7 +56,7 @@ def event_connect():
     print("Connected to Server Socket.")
 
 
-@sio.on('event:test')
+@sio.on('event')
 def event_handler(raw_data):
     if 'event' not in raw_data:
         return
