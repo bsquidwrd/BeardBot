@@ -58,7 +58,6 @@ def event_connect():
 
 @sio.on('event')
 def event_handler(raw_data):
-    logging.info(json.dumps(raw_data))
     if 'type' not in raw_data:
         logging.info('Type not found')
         return
@@ -112,8 +111,6 @@ def event_handler(raw_data):
         if event_type == "tip":
             amount = int(data.get('amount', '1'))
             points = amount
-
-        logging.info(f'{event_id} {name} with type {event_type} and {points} points')
 
         log_event(event_id, name, event_type, points, team, message, event_test)
 
