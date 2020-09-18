@@ -34,9 +34,6 @@ def get_shave_count():
 
 
 def log_event(event_id, event_user, event_type, event_points, event_team, event_message, event_test=False):
-    save_count = get_save_count()
-    shave_count = get_shave_count()
-    logging.info(f'{event_user} put {event_points} points towards {event_team} with a {event_type} #shave {shave_count} | #save {save_count}')
     try:
         existing_logs = BeardLog.objects.filter(event_id=event_id)
         if existing_logs.count() >= 1:
@@ -44,6 +41,9 @@ def log_event(event_id, event_user, event_type, event_points, event_team, event_
             return
         else:
             BeardLog.objects.create(event_id=event_id, event_user=event_user, event_type=event_type, event_points=event_points, event_team=event_team, event_message=event_message, event_test=event_test)
+            save_count = get_save_count()
+            shave_count = get_shave_count()
+            logging.info(f'{event_user} put {event_points} points towards {event_team} with a {event_type} . TOTALS: #shave {shave_count} | #save {save_count}')
     except:
         pass
 
@@ -56,29 +56,26 @@ def event_connect():
     print("Connected to Server Socket.")
 
 
-@sio.on('event:test')
+@sio.on('event')
 def event_handler(raw_data):
-    if 'event' not in raw_data:
+    logging.info(json.dumps(raw_data))
+    if 'type' not in raw_data:
+        logging.info('Type not found')
         return
-    listener_type = raw_data['listener']
+    listener_type = raw_data['type'].lower()
 
-    if listener_type not in ['subscriber-latest', 'tip-latest', 'cheer-latest']:
+    if listener_type not in ['subscriber', 'tip', 'cheer']:
+        logging.info('Type not subscriber, tip or cheer')
         return
-
-    # Please stahp sending data not related
-    # to a god damn event in events fired
-    del raw_data['event']['items']
-
+    
     try:
-        data = raw_data['event']
-        event_type = data['type'].lower()
-        # I... I guess this will work?
-        # StreamElements doesn't send IDs
-        event_id = datetime.now().strftime("YYYYmmdd.HHMMSS")
-        event_test = data.get('isTest', False)
+        data = raw_data['data']
+        event_type = listener_type
+        event_id = raw_data['_id']
+        event_test = raw_data.get('event', {}).get('isTest', False)
         message = data.get('message', '')
         team = get_team(message)
-        name = data['name']
+        name = data['username']
         points = 0
 
         try:
@@ -89,8 +86,9 @@ def event_handler(raw_data):
         if event_type == "subscriber":
             sub_multiplier = 0
             amount = 0
+
             if data.get('gifted', False) == True:
-                amount = 1
+                name = data['sender']
             elif data.get('bulkGifted', False) == True:
                 amount = int(data.get('amount', '1'))
             elif data.get('subExtension', False) == True:
@@ -98,11 +96,11 @@ def event_handler(raw_data):
             else:
                 amount = 1
 
-            if data['tier'] == 1000 or data['tier'] == 'prime':
+            if data['tier'] == "1000" or data['tier'] == 'prime':
                 sub_multiplier = 5
-            elif data['tier'] == 2000:
+            elif data['tier'] == "2000":
                 sub_multiplier = 10
-            elif data['tier'] == 3000:
+            elif data['tier'] == "3000":
                 sub_multiplier = 30
 
             points = sub_multiplier * amount
@@ -115,9 +113,12 @@ def event_handler(raw_data):
             amount = int(data.get('amount', '1'))
             points = amount
 
+        logging.info(f'{event_id} {name} with type {event_type} and {points} points')
+
         log_event(event_id, name, event_type, points, team, message, event_test)
 
     except Exception as e:
+        logging.info(json.dumps(raw_data))
         logging.error(traceback.print_exc())
 
 
