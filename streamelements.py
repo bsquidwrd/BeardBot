@@ -89,16 +89,10 @@ def event_handler(raw_data):
 
         if event_type == "subscriber":
             sub_multiplier = 0
-            amount = 0
+            amount = 1
 
             if data.get('gifted', False) == True:
                 name = data['sender']
-            elif data.get('bulkGifted', False) == True:
-                amount = int(data.get('amount', '1'))
-            elif data.get('subExtension', False) == True:
-                amount = 1
-            else:
-                amount = 1
 
             if data['tier'] == "1000" or data['tier'] == 'prime':
                 sub_multiplier = 5
