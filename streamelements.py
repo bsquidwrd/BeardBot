@@ -56,6 +56,11 @@ def event_connect():
     print("Connected to Server Socket.")
 
 
+# @sio.on('message')
+# def message_hander(msg):
+#     logging.info(msg)
+
+
 @sio.on('event')
 def event_handler(raw_data):
     if 'type' not in raw_data:
